@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Mi Primera App</string>
+    <string name="label_amount">Cantidad</string>
+    <string name="label_people">Comensales</string>
+    <string name="label_round_tip">Redondear Propina</string>
+    <string name="label_rating">Valoración</string>
+    <string name="btn_calculate">Calcular</string>
+    <string name="error_invalid_amount">Indique una cantidad válida</string>
+    <string name="error_invalid_people">Indique uno o más comensales</string>
+    <string name="result_total">Cantidad total: %1$.1f €</string>
+    <string name="result_each">Cada uno: %1$.1f €</string>
+</resources>

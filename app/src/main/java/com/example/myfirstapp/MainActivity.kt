@@ -8,12 +8,16 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Slider
+import androidx.compose.material3.SliderDefaults
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -27,16 +31,18 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.myfirstapp.ui.theme.MyFirstAppTheme
+import com.example.myfirstapp.ui.theme.AppTheme
+import androidx.compose.ui.res.stringResource
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            MyFirstAppTheme {
+            AppTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     Greeting(
                         name = "Android",
@@ -61,43 +67,52 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
     Column (modifier = modifier.padding(16.dp)){
         TextField(
             value =  text1,
-            onValueChange = {newText1 -> text1 = newText1},
-            label = {Text("Cantidad")},
+            onValueChange = { newText1 -> text1 = newText1 },
+            label = { Text(stringResource(R.string.label_amount)) },
             modifier = Modifier.fillMaxWidth()
         )
 
         TextField(
             value =  text2,
-            onValueChange = {newText2 -> text2 = newText2},
-            label = {Text("Comensales")},
+            onValueChange = { newText2 -> text2 = newText2 },
+            label = { Text(stringResource(R.string.label_people)) },
             modifier = Modifier.fillMaxWidth()
         )
 
         Row {
             Text(
-                text = "Redondear Propina",
+                text = stringResource(R.string.label_round_tip),
                 modifier = modifier
             )
             Switch(
                 checked = checked,
-                onCheckedChange = {
-                    checked = it
-                }
+                onCheckedChange = { checked = it }
             )
         }
 
         Text(
-            text = "Valoración",
+            text = stringResource(R.string.label_rating),
             modifier = modifier
         )
-
         Slider(
             value = sliderPosition,
             onValueChange = { sliderPosition = it },
-            valueRange = 0f..5f,
+            colors = SliderDefaults.colors(
+                thumbColor = MaterialTheme.colorScheme.primary,
+                activeTrackColor = MaterialTheme.colorScheme.secondary,
+                inactiveTrackColor = MaterialTheme.colorScheme.secondaryContainer,
+            ),
             steps = 4,
+            valueRange = 0f..25f,
             enabled = checked
         )
+        if (!checked){
+            sliderPosition = 0f
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        val context = LocalContext.current
 
         Button(onClick = {
             errorTexto = ""
@@ -105,28 +120,25 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
             val cantidad = text1.toDoubleOrNull()
             val comensales = text2.toIntOrNull()
             if (cantidad == null || cantidad <= 0) {
-                errorTexto = "Indique una cantidad válida"
+                errorTexto = context.getString(R.string.error_invalid_amount)
                 return@Button
             }
-
             if (comensales == null || comensales <= 0) {
-                errorTexto = "Indique uno o más comensales"
+                errorTexto = context.getString(R.string.error_invalid_people)
                 return@Button
             }
-
             if (checked) {
                 porcentajePropina = 5 * sliderPosition.toInt()
                 totalConPropina = cantidad + (cantidad * porcentajePropina) / 100
-            }else{
+            } else {
                 totalConPropina = cantidad
             }
-
             val costePorPersona = totalConPropina / comensales
 
-            resultadoTexto = "Cantidad total: ${"%.1f".format(totalConPropina)} €\n" +
-                    "Cada uno: ${"%.1f".format(costePorPersona)} €"
+            resultadoTexto = context.getString(R.string.result_total, totalConPropina) + "\n" +
+                    context.getString(R.string.result_each, costePorPersona)
         }) {
-            Text("Calcular")
+            Text(stringResource(R.string.btn_calculate))
         }
 
         if (errorTexto.isNotEmpty()) {
@@ -142,7 +154,7 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
 @Preview(showBackground = true)
 @Composable
 fun GreetingPreview() {
-    MyFirstAppTheme {
+    AppTheme {
         Greeting("Android")
     }
 }

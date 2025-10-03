@@ -1,3 +1,12 @@
 <resources>
-    <string name="app_name">My first App</string>
+    <string name="app_name">My First App</string>
+    <string name="label_amount">Amount</string>
+    <string name="label_people">Guests</string>
+    <string name="label_round_tip">Round Tip</string>
+    <string name="label_rating">Rating</string>
+    <string name="btn_calculate">Calculate</string>
+    <string name="error_invalid_amount">Enter a valid amount</string>
+    <string name="error_invalid_people">Enter one or more guests</string>
+    <string name="result_total">Total: %1$.1f €</string>
+    <string name="result_each">Each: %1$.1f €</string>
 </resources>
